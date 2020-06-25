@@ -1,1 +1,30 @@
-<p>song-list works!</p>
+<table class="tftable">
+  <tr><th>Name</th><th>Album</th><th *ngIf="showPC">Plays</th></tr>
+  <tr *ngFor="let song of sortBy('rank')"
+    (click)="onSelect(song)"
+    [class.selected]="song === selectedSong">
+    <td>{{song.name}}</td> <td>{{song.album}}</td> <td *ngIf="showPC">{{song.plays}}</td> 
+  </tr>
+</table>
+
+<button (click)="bubbleUp()">Up</button>
+
+<button (click)="bubbleDown()">Down</button>
+
+<h2></h2>
+
+<button (click)="toggleSPC()">Cheat</button>
+
+<button (click)="refresh()">Refresh</button>
+
+<h2></h2>
+
+<button (click)="score()">Score</button>
+<div>
+  <b>
+    <h1 *ngIf="showScore; then thenBlock else elseBlock"></h1>
+    <ng-template #thenBlock>{{listScore}}</ng-template>
+    <ng-template #elseBlock>??</ng-template>
+  </b>
+</div>
+
