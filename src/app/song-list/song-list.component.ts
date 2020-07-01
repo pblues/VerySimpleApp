@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import {NgModule} from '@angular/core';
+import {A11yModule} from '@angular/cdk/a11y';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import {DragDropModule, CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+
+
+
 import { Song } from '../song';
 import { SongService } from '../song.service';
 
@@ -39,31 +46,6 @@ export class SongListComponent implements OnInit {
     return this.songs.sort((a, b) => a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1);
   }
 
-  bubbleUp() {
-
-    for (const song of this.songs) {
-      if (song.rank === this.selectedSong.rank - 1) {
-        const temp = song.rank;
-        song.rank = this.selectedSong.rank;
-        this.selectedSong.rank = temp;
-      }
-    }
-
-  }
-
-
-  bubbleDown() {
-
-    for (const song of this.songs) {
-      if (song.rank === this.selectedSong.rank + 1) {
-        const temp = song.rank;
-        song.rank = this.selectedSong.rank;
-        this.selectedSong.rank = temp;
-        break;
-      }
-    }
-
-  }
 
   toggleSPC() {
     this.showPC = !this.showPC;
@@ -86,7 +68,7 @@ export class SongListComponent implements OnInit {
     this.maxValue = 0;
     for (const song1 of this.songs) {
       for (const song2 of this.songs) {
-        if (song1.rank < song2.rank) {
+        if (this.songs.findIndex(x => x.id === song1.id) < this.songs.findIndex(x => x.id === song2.id)) {
           this.maxValue += Math.abs(song1.plays - song2.plays);
           if (song1.plays > song2.plays) {
             this.value += song1.plays - song2.plays;
@@ -98,4 +80,7 @@ export class SongListComponent implements OnInit {
     this.showScore = true;
   }
 
+  drop(event: CdkDragDrop<Song[]>) {
+    moveItemInArray(this.songs, event.previousIndex, event.currentIndex);
+  }
 }
